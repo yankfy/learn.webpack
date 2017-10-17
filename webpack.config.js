@@ -22,8 +22,12 @@ module.exports = {
     plugins:[
 
     ],
-    // 开发服务
+    // 开发服务和热更新
+    // 启动要安装webpack-dev-server
     devServer:{
-
+        contentBase:path.resolve(__dirname,'dist'),
+        host:'192.168.3.3', // 一般写ip地址,不写localhost
+        compress:true,// 服务器压缩
+        port:8888
     }
 }

@@ -1,0 +1,1 @@
+document.getElementById('title').innerHTML = "Hello webpack.3.0base"

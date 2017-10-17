@@ -1,7 +1,3 @@
-# 从Webpack3.0小白到大神
----
-# 配置：入口和出口
-```js
 // 引入path
 const path = require('path')
 
@@ -31,4 +27,3 @@ module.exports = {
 
     }
 }
-```

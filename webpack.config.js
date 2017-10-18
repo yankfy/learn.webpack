@@ -5,6 +5,12 @@ const webpack = require('webpack')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 // HTML打包
 const htmlPlugin = require('html-webpack-plugin')
+// 分离CSS
+const extractTextPlugin = require('extract-text-webpack-plugin')
+
+var website = {
+    publicPath:"http://192.168.3.3:8888/" // 最后的/不能省掉
+}
 
 module.exports = {
     // 入口配置项
@@ -17,39 +23,46 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         // name表示名字与入口文件一样
-        filename: "[name].js"
+        filename: "[name].js",
+        // 公用路径 路径链接变成绝对链接
+        publicPath:website.publicPath
     },
     // 模块配置项
     module: {
         rules: [
             // 打包CSS 需安装 style-loader处理样式 css-loader处理标签
             {
-                test:/\.css$/,
+                test: /\.css$/,
                 // 写法1
                 // use:['style-loader','css-loader'],
                 // 写法2
                 // loader:['style-loader','css-loader'],
                 // 写法3
-                use:[
-                    {
-                        loader:"style-loader"
-                        // module:true
-                    },{
-                        loader:"css-loader"
-                    }
-                ]
+                // use:[
+                //     {
+                //         loader:"style-loader"
+                //         // module:true
+                //     },{
+                //         loader:"css-loader"
+                //     }
+                // ]
+                // 分离CSS
+                use: extractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                })
                 // 可选配置项
                 // include:
                 // exclude:
                 // query:
-            },{
-                test:/\.(png|jpg|gif)/,
-                use:[{
-                    loader:"url-loader",
+            }, {
+                test: /\.(png|jpg|gif)/,
+                use: [{
+                    loader: "url-loader",
                     // 小于5000字节是js中的base64，否则是生成的图片路径
                     // url-loader中包含file-loader功能，filer-loader处理路径问题
-                    options:{
-                        limit:5000
+                    options: {
+                        limit: 5000
                     }
                 }]
             }
@@ -62,13 +75,15 @@ module.exports = {
         // html打包
         new htmlPlugin({
             // 去掉双引号
-            minify:{
-                removeAttributeQuotes:true
+            minify: {
+                removeAttributeQuotes: true
             },
             // js hash缓存
-            hash:true,
-            template:'./src/index.html'
-        })
+            hash: true,
+            template: './src/index.html'
+        }),
+        // 分离CSS
+        new extractTextPlugin("/css/index.css")
     ],
     // 开发服务和热更新
     // 启动要安装webpack-dev-server

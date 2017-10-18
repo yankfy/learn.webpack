@@ -42,6 +42,16 @@ module.exports = {
                 // include:
                 // exclude:
                 // query:
+            },{
+                test:/\.(png|jpg|gif)/,
+                use:[{
+                    loader:"url-loader",
+                    // 小于5000字节是js中的base64，否则是生成的图片路径
+                    // url-loader中包含file-loader功能，filer-loader处理路径问题
+                    options:{
+                        limit:5000
+                    }
+                }]
             }
         ]
     },

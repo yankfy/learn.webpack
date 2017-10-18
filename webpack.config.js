@@ -1,7 +1,10 @@
 // 引入path
 const path = require('path')
+const webpack = require('webpack')
 // 压缩JS
-const uglify = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// HTML打包
+const htmlPlugin = require('html-webpack-plugin')
 
 module.exports = {
     // 入口配置项
@@ -45,7 +48,17 @@ module.exports = {
     // 插件功能项数组
     plugins: [
         // min
-        new uglify()
+        new UglifyJsPlugin(),
+        // html打包
+        new htmlPlugin({
+            // 去掉双引号
+            minify:{
+                removeAttributeQuotes:true
+            },
+            // js hash缓存
+            hash:true,
+            template:'./src/index.html'
+        })
     ],
     // 开发服务和热更新
     // 启动要安装webpack-dev-server

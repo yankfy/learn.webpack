@@ -133,7 +133,7 @@ module.exports = {
 }
 ```
 ---
-# 压缩JS代码
+# 压缩JS代码（生产环境）
 ```js
 // 引入path
 const path = require('path')

@@ -4,7 +4,7 @@
   "description": "webpack3.0base",
   "main": "index.js",
   "scripts": {
-    "server":"webpack-dev-server"
+    "server": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/yankfy/webpack.base#readme",
   "devDependencies": {
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.19.0",
     "webpack": "^3.8.0",
     "webpack-dev-server": "^2.9.2"
   }

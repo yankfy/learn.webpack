@@ -9,7 +9,7 @@ const htmlPlugin = require('html-webpack-plugin')
 const extractTextPlugin = require('extract-text-webpack-plugin')
 
 var website = {
-    publicPath:"http://192.168.3.3:8888/" // 最后的/不能省掉
+    publicPath: "http://192.168.3.3:8888/" // 最后的/不能省掉
 }
 
 module.exports = {
@@ -25,9 +25,9 @@ module.exports = {
         // name表示名字与入口文件一样
         filename: "[name].js",
         // 公用路径 路径链接变成绝对链接
-        publicPath:website.publicPath
+        publicPath: website.publicPath
     },
-    // 模块配置项
+    // 模块配置项 loader
     module: {
         rules: [
             // 打包CSS 需安装 style-loader处理样式 css-loader处理标签
@@ -62,9 +62,25 @@ module.exports = {
                     // 小于5000字节是js中的base64，否则是生成的图片路径
                     // url-loader中包含file-loader功能，filer-loader处理路径问题
                     options: {
-                        limit: 5000
+                        limit: 5000,
+                        // 分离images文件夹
+                        outputPath: 'images/'
                     }
                 }]
+            }, {
+                test: /\.(html|htm)$/i,
+                use: ['html-withimg-loader']
+            }, {
+                test: /\.less$/,
+                // use:[{loader:'style-loader'},{loader:'css-loader'},{loader:'less-loader'}]
+                use: extractTextPlugin.extract({
+                    use: [{
+                        loader: 'css-loader'
+                    }, {
+                        loader: 'less-loader'
+                    }],
+                    fallback: 'style-loader',
+                })
             }
         ]
     },
@@ -82,8 +98,8 @@ module.exports = {
             hash: true,
             template: './src/index.html'
         }),
-        // 分离CSS
-        new extractTextPlugin("/css/index.css")
+        // 分离CSS文件夹
+        new extractTextPlugin("css/index.css")
     ],
     // 开发服务和热更新
     // 启动要安装webpack-dev-server

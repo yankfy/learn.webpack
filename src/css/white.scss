@@ -1,0 +1,10 @@
+$blue:blue;
+@mixin size($x,$y){
+    width: $x;
+    height: $y;
+}
+
+#hahascss{
+    background-color:$blue;
+    @include size(100%,50px);
+}

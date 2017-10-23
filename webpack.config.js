@@ -11,8 +11,16 @@ const extractTextPlugin = require('extract-text-webpack-plugin')
 // 消除无用的css
 const purifyCssPlugin = require('purifycss-webpack');
 
-var website = {
-    publicPath: "http://192.168.3.3:8888/" // 最后的/不能省掉
+console.log(encodeURIComponent(process.env.type))
+if (process.env.type == "build") {
+    // 上线域名
+    var website = {
+        publicPath: "http://51cco.cn:8888/" // 最后的/不能省掉
+    }
+} else {
+    var website = {
+        publicPath: "http://192.168.3.3:8888/" // 最后的/不能省掉
+    }
 }
 
 // Babel 转ES5
@@ -20,7 +28,7 @@ var website = {
 
 module.exports = {
     // 打开调试模式
-    devtool:'source-map',
+    // devtool:'source-map',
     // 入口配置项
     entry: {
         // 名字随便写,多入口文件
@@ -58,7 +66,7 @@ module.exports = {
                 use: extractTextPlugin.extract({
                     fallback: "style-loader",
                     // 增加前缀设置
-                    use: ['css-loader','postcss-loader']
+                    use: ['css-loader', 'postcss-loader']
                 })
                 // 可选配置项
                 // include:
@@ -101,17 +109,17 @@ module.exports = {
                     }],
                     fallback: "style-loader"
                 })
-            },{
-                test:"/\.(jsx|js)$/",
-                use:{
-                    loader:"babel-loader",
+            }, {
+                test: "/\.(jsx|js)$/",
+                use: {
+                    loader: "babel-loader",
                     // 可外部配置
                     // options:{
                     //     presets:["es2015","react"]
                     // }
                 },
                 // 去除掉哪个文件夹
-                exclude:"/node_modules/"
+                exclude: "/node_modules/"
             }
         ]
     },
@@ -133,7 +141,7 @@ module.exports = {
         new extractTextPlugin("css/index.css"),
         // 消除无用的CSS
         new purifyCssPlugin({
-            paths:glob.sync(path.join(__dirname,'src/*html'))
+            paths: glob.sync(path.join(__dirname, 'src/*html'))
         })
     ],
     // 开发服务和热更新

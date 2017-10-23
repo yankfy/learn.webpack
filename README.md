@@ -1260,5 +1260,174 @@ cheap-module-souce-map 独立map，但不包括列 打包快
 eval-source-map 不生成独立map ，直接在js中生成 打包快 有性能和安全性的隐患
 cheap-module-eval-source-map 不生成独立map ，不包括列
 ```js
+devtool:"eval-source-map"
+```
+---
+# 开发和生产环境并行
+```js
+// 只安装生产环境中的开发包
+npm install --production
+// win下配置
+ "build": "set type=build&webpack",
+ "dev":"set type=dev&webpack"
+// mac电脑和linux下的配置修改
+ "build": "export type=build&&webpack",
+ "dev":"export type=dev&&webpack"
+```
+```js
+// 引入path
+const path = require('path')
+const glob = require('glob')
+const webpack = require('webpack')
+// 压缩JS
+const uglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// HTML打包
+const htmlPlugin = require('html-webpack-plugin')
+// 分离CSS
+const extractTextPlugin = require('extract-text-webpack-plugin')
+// 消除无用的css
+const purifyCssPlugin = require('purifycss-webpack');
 
+console.log(encodeURIComponent(process.env.type))
+if (process.env.type == "build") {
+    // 上线域名
+    var website = {
+        publicPath: "http://51cco.cn:8888/" // 最后的/不能省掉
+    }
+} else {
+    var website = {
+        publicPath: "http://192.168.3.3:8888/" // 最后的/不能省掉
+    }
+}
+
+// Babel 转ES5
+
+
+module.exports = {
+    // 打开调试模式
+    // devtool:'source-map',
+    // 入口配置项
+    entry: {
+        // 名字随便写,多入口文件
+        entry: "./src/entry.js",
+        // entry2: "./src/entry2.js"
+    },
+    // 出口配置项
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        // name表示名字与入口文件一样
+        filename: "[name].js",
+        // 公用路径 路径链接变成绝对链接
+        publicPath: website.publicPath
+    },
+    // 模块配置项 loader
+    module: {
+        rules: [
+            // 打包CSS 需安装 style-loader处理样式 css-loader处理标签
+            {
+                test: /\.css$/,
+                // 写法1
+                // use:['style-loader','css-loader'],
+                // 写法2
+                // loader:['style-loader','css-loader'],
+                // 写法3
+                // use:[
+                //     {
+                //         loader:"style-loader"
+                //         // module:true
+                //     },{
+                //         loader:"css-loader"
+                //     }
+                // ]
+                // 分离CSS
+                use: extractTextPlugin.extract({
+                    fallback: "style-loader",
+                    // 增加前缀设置
+                    use: ['css-loader', 'postcss-loader']
+                })
+                // 可选配置项
+                // include:
+                // exclude:
+                // query:
+            }, {
+                test: /\.(png|jpg|gif)/,
+                use: [{
+                    loader: "url-loader",
+                    // 小于5000字节是js中的base64，否则是生成的图片路径
+                    // url-loader中包含file-loader功能，filer-loader处理路径问题
+                    options: {
+                        limit: 5000,
+                        // 分离images文件夹
+                        outputPath: 'images/'
+                    }
+                }]
+            }, {
+                test: /\.(html|htm)$/i,
+                use: ['html-withimg-loader']
+            }, {
+                test: /\.less$/,
+                // use:[{loader:'style-loader'},{loader:'css-loader'},{loader:'less-loader'}]
+                use: extractTextPlugin.extract({
+                    use: [{
+                        loader: 'css-loader'
+                    }, {
+                        loader: 'less-loader'
+                    }],
+                    fallback: 'style-loader',
+                })
+            }, {
+                test: /\.scss$/,
+                // use:[{loader:'style-loader'},{loader:'css-loader'},{loader:'sass-loader'}]
+                use: extractTextPlugin.extract({
+                    use: [{
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader"
+                    }],
+                    fallback: "style-loader"
+                })
+            }, {
+                test: "/\.(jsx|js)$/",
+                use: {
+                    loader: "babel-loader",
+                    // 可外部配置
+                    // options:{
+                    //     presets:["es2015","react"]
+                    // }
+                },
+                // 去除掉哪个文件夹
+                exclude: "/node_modules/"
+            }
+        ]
+    },
+    // 插件功能项数组
+    plugins: [
+        // min
+        new uglifyJsPlugin(),
+        // html打包
+        new htmlPlugin({
+            // 去掉双引号
+            minify: {
+                removeAttributeQuotes: true
+            },
+            // js hash缓存
+            hash: true,
+            template: './src/index.html'
+        }),
+        // 分离CSS文件夹
+        new extractTextPlugin("css/index.css"),
+        // 消除无用的CSS
+        new purifyCssPlugin({
+            paths: glob.sync(path.join(__dirname, 'src/*html'))
+        })
+    ],
+    // 开发服务和热更新
+    // 启动要安装webpack-dev-server
+    devServer: {
+        contentBase: path.resolve(__dirname, 'dist'),
+        host: '192.168.3.3', // 一般写ip地址,不写localhost
+        compress: true, // 服务器压缩
+        port: 8888
+    }
+}
 ```

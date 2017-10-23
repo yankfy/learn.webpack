@@ -1,12 +1,15 @@
 // 引入path
 const path = require('path')
+const glob = require('glob')
 const webpack = require('webpack')
 // 压缩JS
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const uglifyJsPlugin = require('uglifyjs-webpack-plugin')
 // HTML打包
 const htmlPlugin = require('html-webpack-plugin')
 // 分离CSS
 const extractTextPlugin = require('extract-text-webpack-plugin')
+// 消除无用的css
+const purifyCssPlugin = require('purifycss-webpack');
 
 var website = {
     publicPath: "http://192.168.3.3:8888/" // 最后的/不能省掉
@@ -99,7 +102,7 @@ module.exports = {
     // 插件功能项数组
     plugins: [
         // min
-        new UglifyJsPlugin(),
+        new uglifyJsPlugin(),
         // html打包
         new htmlPlugin({
             // 去掉双引号
@@ -111,7 +114,11 @@ module.exports = {
             template: './src/index.html'
         }),
         // 分离CSS文件夹
-        new extractTextPlugin("css/index.css")
+        new extractTextPlugin("css/index.css"),
+        // 消除无用的CSS
+        new purifyCssPlugin({
+            paths:glob.sync(path.join(__dirname,'src/*html'))
+        })
     ],
     // 开发服务和热更新
     // 启动要安装webpack-dev-server

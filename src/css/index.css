@@ -9,3 +9,10 @@ body{
     transform: rotate(45deg);
     box-shadow: 0 0 5px rgba(255, 255, 0, 1)
 }
+#aaa{
+    background-image: url(../images/picture.jpg);
+    width: 300px;
+    height: 300px; 
+    transform: rotate(45deg);
+    box-shadow: 0 0 5px rgba(255, 255, 0, 1)
+}

@@ -19,11 +19,13 @@ var website = {
 
 
 module.exports = {
+    // 打开调试模式
+    devtool:'source-map',
     // 入口配置项
     entry: {
         // 名字随便写,多入口文件
         entry: "./src/entry.js",
-        entry2: "./src/entry2.js"
+        // entry2: "./src/entry2.js"
     },
     // 出口配置项
     output: {

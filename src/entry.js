@@ -7,4 +7,7 @@ import less from './css/white.scss'
 
 let name = "Pony"
 
-document.getElementById('title').innerHTML = `Hello My webpack.3.0base my name is ${name}`
+let base = "webpack"
+
+document.getElementById('title').innerHTML = `Hello My ${base}.3.0base my name is ${name}`
+

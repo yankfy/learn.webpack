@@ -1253,3 +1253,12 @@ module.exports = {
     }
 }
 ```
+---
+# 打包后的代码调试
+source-map 独立map 包括行和列 打包慢
+cheap-module-souce-map 独立map，但不包括列 打包快
+eval-source-map 不生成独立map ，直接在js中生成 打包快 有性能和安全性的隐患
+cheap-module-eval-source-map 不生成独立map ，不包括列
+```js
+
+```

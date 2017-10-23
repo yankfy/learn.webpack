@@ -49,7 +49,8 @@ module.exports = {
                 // 分离CSS
                 use: extractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: "css-loader"
+                    // 增加前缀设置
+                    use: ['css-loader','postcss-loader']
                 })
                 // 可选配置项
                 // include:

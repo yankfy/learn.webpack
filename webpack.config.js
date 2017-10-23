@@ -15,6 +15,9 @@ var website = {
     publicPath: "http://192.168.3.3:8888/" // 最后的/不能省掉
 }
 
+// Babel 转ES5
+
+
 module.exports = {
     // 入口配置项
     entry: {
@@ -96,6 +99,17 @@ module.exports = {
                     }],
                     fallback: "style-loader"
                 })
+            },{
+                test:"/\.(jsx|js)$/",
+                use:{
+                    loader:"babel-loader",
+                    // 可外部配置
+                    // options:{
+                    //     presets:["es2015","react"]
+                    // }
+                },
+                // 去除掉哪个文件夹
+                exclude:"/node_modules/"
             }
         ]
     },

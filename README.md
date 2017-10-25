@@ -1431,3 +1431,36 @@ module.exports = {
     }
 }
 ```
+---
+# 模块化配置
+```js
+// 引入其他的配置文件
+// entry等等
+```
+--- 
+# 优雅打包第三方类库
+```js
+// 1、js中import引用
+// 2、配置文件中引用 更优化
+```
+---
+# watch正确使用方法
+
+---
+# 版权
+```js
+new webpack.BannerPlugin("这是破泥的版权")
+```
+---
+# webpack优化黑技能
+```js
+// 压缩分离第三方类库
+```
+
+---
+# 集中拷贝静态资源
+```js
+// public文件夹
+// 先安装
+npm i --save-dev copy-webpack-plugin
+```

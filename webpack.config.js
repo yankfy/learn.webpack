@@ -10,6 +10,11 @@ const htmlPlugin = require('html-webpack-plugin')
 const extractTextPlugin = require('extract-text-webpack-plugin')
 // 消除无用的css
 const purifyCssPlugin = require('purifycss-webpack');
+// 引入copy
+const copyWebpackPlugin = require('copy-webpack-plugin');
+
+// 引入模块
+const entry = require('./webpack_config/entry.webpack');
 
 console.log(encodeURIComponent(process.env.type))
 if (process.env.type == "build") {
@@ -34,7 +39,10 @@ module.exports = {
         // 名字随便写,多入口文件
         entry: "./src/entry.js",
         // entry2: "./src/entry2.js"
+        jquery: "jquery",
+        vue: "vue"
     },
+    // entry:entry.path,
     // 出口配置项
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -125,6 +133,18 @@ module.exports = {
     },
     // 插件功能项数组
     plugins: [
+        // 配置第三方库
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            'vue': "vue"
+        }),
+        // 优化入口文件
+        new webpack.optimize.CommonsChunkPlugin({
+            name: ['jquery', 'vue'],
+            filename: 'assets/js/[name].min.js',
+            // 一般都写2，抽离几个文件
+            minChunks: 2
+        }),
         // min
         new uglifyJsPlugin(),
         // html打包
@@ -142,7 +162,14 @@ module.exports = {
         // 消除无用的CSS
         new purifyCssPlugin({
             paths: glob.sync(path.join(__dirname, 'src/*html'))
-        })
+        }),
+        // 版权
+        new webpack.BannerPlugin("这是破泥的版权"),
+        // 集中打包静态文件
+        new copyWebpackPlugin([{
+            from: __dirname + '/src/public',
+            to: "./public"
+        }])
     ],
     // 开发服务和热更新
     // 启动要安装webpack-dev-server
@@ -151,5 +178,13 @@ module.exports = {
         host: '192.168.3.3', // 一般写ip地址,不写localhost
         compress: true, // 服务器压缩
         port: 8888
+    },
+    watchOptions: {
+        // 检测修改的时间 ms
+        poll: 1000,
+        // 半秒内重复保存不打包
+        aggregeateTimeout: 500,
+        // 不检测 ,这里不加双引号！
+        ignore: /node_modules/
     }
 }

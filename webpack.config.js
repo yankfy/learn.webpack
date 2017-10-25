@@ -141,7 +141,7 @@ module.exports = {
         // 优化入口文件
         new webpack.optimize.CommonsChunkPlugin({
             name: ['jquery', 'vue'],
-            filename: 'assets/js/[name].min.js',
+            filename: 'assets/js/[name].min.[ext]',
             // 一般都写2，抽离几个文件
             minChunks: 2
         }),
@@ -169,7 +169,9 @@ module.exports = {
         new copyWebpackPlugin([{
             from: __dirname + '/src/public',
             to: "./public"
-        }])
+        }]),
+        // 热更新不起作用时添加下行
+        new webpack.HotModuleReplacementPlugin()
     ],
     // 开发服务和热更新
     // 启动要安装webpack-dev-server

@@ -10,7 +10,8 @@ import pom from './pom'
 // 第一种引入jquery
 // import $ from 'jquery';
 
-{
+// 引入json
+var json = require('../config.json'); {
     let name = "Pony"
 
     let base = "webpack"
@@ -19,3 +20,5 @@ import pom from './pom'
     $('#title').html(`Hello My ${base}.3.0base my name is ${name}`)
 }
 pom()
+
+document.getElementById("json").innerHTML = json.name + ":website" + json.site;
